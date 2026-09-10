@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>球星卡日报</title>
+<style>
+  :root{
+    --bg:#f5f7fb; --panel:#ffffff; --ink:#1f2430; --muted:#6b7280;
+    --line:#e6e9f0; --shadow:0 1px 3px rgba(16,24,40,.06),0 6px 20px rgba(16,24,40,.05);
+    --radius:16px; --total:#b45309;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px 64px}
+  .hero{background:linear-gradient(135deg,#b45309 0%,#dc2626 55%,#7c2d12 100%);color:#fff;border-radius:0 0 28px 28px;padding:44px 20px 36px;box-shadow:var(--shadow)}
+  .hero-inner{max-width:1120px;margin:0 auto;padding:0 20px}
+  .kicker{font-size:13px;letter-spacing:.16em;text-transform:uppercase;opacity:.85;font-weight:600}
+  .hero h1{font-size:34px;font-weight:800;margin:6px 0 2px;letter-spacing:.5px}
+  .hero .date{font-size:20px;font-weight:600;opacity:.95}
+  .hero .gen{font-size:13px;opacity:.82;margin-top:6px}
+  .stats{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+  .stat{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:14px;padding:12px 16px;min-width:96px;backdrop-filter:blur(4px)}
+  .stat .n{font-size:24px;font-weight:800;line-height:1}
+  .stat .l{font-size:12.5px;opacity:.92;margin-top:5px}
+  .stat.total{background:rgba(255,255,255,.95);color:var(--total)}
+  .stat.total .l{color:#6b7280}
+  .controls{background:var(--panel);border-bottom:1px solid var(--line);padding:14px 0}
+  .controls-inner{max-width:1120px;margin:0 auto;padding:0 20px;display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+  .ctl-label{font-weight:700;font-size:14px;color:var(--ink)}
+  .controls label{font-size:13px;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+  .controls input[type=date]{font-family:inherit;font-size:13px;padding:7px 10px;border:1px solid var(--line);border-radius:9px;color:var(--ink);background:#fff}
+  .controls .sep{color:var(--muted);font-weight:700}
+  #refreshBtn{cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;color:#fff;border:none;border-radius:10px;padding:9px 18px;background:var(--total);box-shadow:var(--shadow);transition:.15s}
+  #refreshBtn:hover{transform:translateY(-1px);filter:brightness(1.05)}
+  #exportPdfBtn,#exportImgBtn{cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;border:1px solid var(--line);border-radius:10px;padding:9px 16px;background:#fff;box-shadow:var(--shadow);transition:.15s}
+  #exportPdfBtn{color:#b91c1c}
+  #exportImgBtn{color:#0f766e}
+  #exportPdfBtn:hover,#exportImgBtn:hover{transform:translateY(-1px);background:#f9fafb}
+  .status{font-size:13px;color:var(--muted);margin-left:4px}
+  .nav{position:sticky;top:0;z-index:20;background:rgba(245,247,251,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:12px 0;margin-bottom:26px}
+  .nav-inner{max-width:1120px;margin:0 auto;padding:0 20px;display:flex;flex-wrap:wrap;gap:10px}
+  .nav a{text-decoration:none;color:var(--ink);font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:7px 15px;display:flex;align-items:center;gap:7px;transition:.15s}
+  .nav a:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+  .nav a .dot{width:9px;height:9px;border-radius:50%}
+  .nav a .c{font-size:12px;color:var(--muted);font-weight:700}
+  .section{margin-bottom:38px;scroll-margin-top:70px}
+  .sec-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+  .sec-bar{width:5px;height:26px;border-radius:4px}
+  .sec-head h2{font-size:21px;font-weight:800}
+  .sec-head .cnt{font-size:13px;color:var(--muted);font-weight:600;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px 11px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:.18s;position:relative;overflow:hidden}
+  .card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent,#4f46e5)}
+  .card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(16,24,40,.10)}
+  .card-top{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+  .num{flex:0 0 auto;width:30px;height:30px;border-radius:9px;background:var(--accent,#4f46e5);color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center}
+  .chip{font-size:12px;font-weight:600;color:var(--accent,#4f46e5);background:color-mix(in srgb,var(--accent,#4f46e5) 12%,#fff);border:1px solid color-mix(in srgb,var(--accent,#4f46e5) 28%,#fff);border-radius:999px;padding:3px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  .card h3{font-size:16px;font-weight:700;line-height:1.5;margin-bottom:7px}
+  .card h3 a{color:var(--ink);text-decoration:none}
+  .card h3 a:hover{color:var(--accent,#4f46e5);text-decoration:underline}
+  .orig{font-size:12px;color:var(--muted);margin:-2px 0 9px;font-style:italic}
+  .sum{font-size:13.5px;color:#3a4252;flex:1;margin-bottom:13px}
+  .badges{display:flex;flex-wrap:wrap;gap:6px;margin:-2px 0 10px}
+  .badge{font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:8px;border:1px solid;display:inline-flex;align-items:center;gap:4px;line-height:1.25;white-space:nowrap}
+  .badge.deadline.urgent{color:#fff;background:#dc2626;border-color:#dc2626;box-shadow:0 0 0 2px rgba(220,38,38,.18),0 2px 8px rgba(220,38,38,.25);animation:pulseUrgent 1.8s ease-in-out infinite}
+  @keyframes pulseUrgent{0%,100%{box-shadow:0 0 0 2px rgba(220,38,38,.18),0 2px 8px rgba(220,38,38,.25)}50%{box-shadow:0 0 0 5px rgba(220,38,38,.10),0 2px 12px rgba(220,38,38,.40)}}
+  .badge.deadline.soon{color:#92400e;background:#fef3c7;border-color:#fcd34d}
+  .badge.deadline.normal{color:#374151;background:#f3f4f6;border-color:#e5e7eb}
+  .badge.deadline.overdue{color:#fff;background:#6b7280;border-color:#6b7280;text-decoration:line-through}
+  .badge.release{color:#1e40af;background:#dbeafe;border-color:#93c5fd}
+  .badge.status{color:#065f46;background:#d1fae5;border-color:#6ee7b7}
+  .players{background:color-mix(in srgb,var(--accent,#4f46e5) 7%,#fff);border:1px solid color-mix(in srgb,var(--accent,#4f46e5) 18%,#fff);border-radius:10px;padding:9px 11px;margin-bottom:13px}
+  .pl-h{font-size:11.5px;font-weight:800;letter-spacing:.06em;color:var(--accent,#4f46e5);margin-bottom:6px}
+  .pl{font-size:12.5px;color:#3a4252;line-height:1.5;margin-bottom:5px}
+  .pl:last-child{margin-bottom:0}
+  .pl-n{font-weight:800;color:var(--ink)}
+  .pl-m{color:var(--muted);margin:0 6px}
+  .pl-x{display:block;color:#3a4252;margin-top:1px}
+  .read{align-self:flex-start;font-size:13px;font-weight:700;color:var(--accent,#4f46e5);text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+  .read:hover{text-decoration:underline}
+  .empty{background:var(--panel);border:1px dashed var(--line);border-radius:var(--radius);padding:22px;text-align:center;color:var(--muted);font-size:14px}
+  footer{margin-top:30px;border-top:1px solid var(--line);padding-top:22px;text-align:center;color:var(--muted);font-size:13px}
+  footer a{color:var(--total);text-decoration:none}
+  footer .big{font-weight:800;color:var(--ink);font-size:15px}
+  @media(max-width:560px){.hero h1{font-size:27px}.stats{gap:9px}.stat{min-width:80px;padding:10px 12px}.controls-inner{gap:8px}.grid{grid-template-columns:1fr}}
+  @media print{
+    .controls,.nav,footer{display:none !important}
+    #refreshBtn,#exportPdfBtn,#exportImgBtn{display:none !important}
+    .badges .deadline.urgent{animation:none !important;box-shadow:none !important}
+    body{background:#fff}
+    .wrap{padding:0 12px 24px;max-width:none}
+    .hero{background:#b45309 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;border-radius:0;padding:24px 16px 18px}
+    .hero h1{font-size:24px}
+    .card{break-inside:avoid;page-break-inside:avoid;box-shadow:none;border:1px solid #d1d5db}
+    .section{break-inside:auto}
+    .sec-head{break-after:avoid;page-break-after:avoid}
+    .grid{grid-template-columns:repeat(2,1fr);gap:10px}
+    .players{break-inside:avoid}
+    a{color:#1f2430 !important;text-decoration:none}
+  }
+</style>
+</head>
+<body>
+  <header class="hero"><div class="hero-inner">
+    <div class="kicker" id="kicker"></div>
+    <h1 id="title"></h1>
+    <div class="date" id="dateLine"></div>
+    <div class="gen" id="genLine"></div>
+    <div class="stats" id="stats"></div>
+  </div></header>
+
+  <div class="controls"><div class="controls-inner">
+    <span class="ctl-label">日期范围</span>
+    <label>起始 <input type="date" id="startDate"></label>
+    <span class="sep">→</span>
+    <label>结束 <input type="date" id="endDate"></label>
+    <button id="refreshBtn" type="button">↻ 刷新</button>
+    <button id="exportPdfBtn" type="button" title="将当前日报另存为 PDF（通过浏览器打印）">📄 导出 PDF</button>
+    <button id="exportImgBtn" type="button" title="将当前日报导出为 PNG 图片">🖼️ 导出图片</button>
+    <span class="status" id="status"></span>
+  </div></div>
+
+  <nav class="nav"><div class="nav-inner" id="nav"></div></nav>
+  <main class="wrap" id="main"></main>
+
+  <footer>
+    <div class="big" id="footCount"></div>
+    <div id="footSrc" style="margin-top:6px"></div>
+    <div id="footNote" style="margin-top:4px"></div>
+  </footer>
+
+<script>const EMB={"date": "2026-09-10", "source": "Topps NOW / Panini 官网 / 行业媒体（联网检索）", "note": "检索日期 2026-09-10，参考 Topps NOW、Topps 发行日历、Panini America/UK 官网及行业媒体。球星卡日报为联网检索快照，无实时 API；其他日期需生成对应快照文件（data/card-YYYY-MM-DD.json）后，刷新按钮方可加载。", "title": "球星卡日报", "kicker": "球星卡 · 每日早报（Topps NOW / Panini）", "sections": [{"label": "Topps NOW 即时卡（球星聚焦）", "color": "#6366f1", "items": [{"title": "梅西 2026 阿根廷 Topps NOW 第 1 卡（国际赛退役纪念）", "orig": "Lionel Messi - 2026 Argentina Topps NOW - Card 1", "source": "Topps NOW", "url": "https://www.topps.com/collections/topps-now", "summary": "梅西阿根廷国家队谢幕主题卡，限 9/11 前发售，含潜力签名版本。", "players": [{"name": "莱昂内尔·梅西", "team": "阿根廷 / 国际迈阿密", "pos": "前锋", "note": "世界杯·美洲杯·多届金球奖得主；2026 年退出阿根廷国家队国际赛。"}], "dates": {"deadline": "2026-09-11"}}, {"title": "村上宗隆 2026 MLB Topps NOW 第 638 卡", "orig": "Munetaka Murakami - 2026 MLB Topps NOW - Card 638", "source": "Topps NOW", "url": "https://www.topps.com/collections/topps-now", "summary": "日本棒球代表核心强打者焦点卡，限 9/10 前发售，含签名潜力。", "players": [{"name": "村上宗隆", "team": "东京养乐多燕子（日职棒）", "pos": "三垒手", "note": "2022 年单季 56 支全垒打刷新日本纪录。"}], "dates": {"deadline": "2026-09-10"}}, {"title": "特拉维斯·巴扎纳 2026 MLB Living Set 第 941 卡", "orig": "Travis Bazzana - 2026 MLB Living Set - Card 941", "source": "Topps NOW", "url": "https://www.topps.com/collections/topps-now", "summary": "2024 年选秀状元连载系列卡，限 9/11 前发售。", "players": [{"name": "特拉维斯·巴扎纳", "team": "克利夫兰守护者", "pos": "二垒手", "note": "2024 年 MLB 选秀状元，首位澳大利亚籍状元。"}], "dates": {"deadline": "2026-09-11"}}, {"title": "拉明·亚马尔 2026-27 巴萨 Topps NOW 第 2 卡", "orig": "Lamine Yamal - 2026-27 FC Barcelona Topps NOW - Card 2", "source": "Topps NOW", "url": "https://www.topps.com/collections/topps-now", "summary": "巴萨天才边锋焦点卡，限 9/11 前发售，含签名潜力。", "players": [{"name": "拉明·亚马尔", "team": "巴塞罗那", "pos": "边锋", "note": "2007 年生，2024 欧洲杯冠军暨最年轻出场球员之一。"}], "dates": {"deadline": "2026-09-11"}}, {"title": "布鲁诺·费尔南德斯 2026-27 英超 Topps NOW 第 14 卡", "orig": "Bruno Fernandes - 2026-27 Premier League Topps NOW - Card 14", "source": "Topps NOW", "url": "https://www.topps.com/collections/topps-now", "summary": "曼联队长英超焦点卡，限 9/10 前发售。", "players": [{"name": "布鲁诺·费尔南德斯", "team": "曼联", "pos": "中场 / 队长", "note": "葡萄牙国脚，球队组织核心。"}], "dates": {"deadline": "2026-09-10"}}, {"title": "卢卡斯·佩特科夫 2026-27 德甲 Topps NOW 第 7 卡", "orig": "Lukas Petkov - 2026-27 Bundesliga Topps NOW - Card 7", "source": "Topps NOW", "url": "https://www.topps.com/collections/topps-now", "summary": "德甲新锐焦点卡，限 9/10 前发售。", "players": [{"name": "卢卡斯·佩特科夫", "team": "德甲", "pos": "中场 / 前锋", "note": "德甲新生代进攻球员。"}], "dates": {"deadline": "2026-09-10"}}, {"title": "尤尼斯·埃布努塔利布 2026-27 德甲 Topps NOW 第 6 卡", "orig": "Younes Ebnoutalib - 2026-27 Bundesliga Topps NOW - Card 6", "source": "Topps NOW", "url": "https://www.topps.com/collections/topps-now", "summary": "德甲新锐焦点卡，限 9/10 前发售。", "players": [{"name": "尤尼斯·埃布努塔利布", "team": "德甲", "pos": "中场 / 前锋", "note": "德甲新生代球员。"}], "dates": {"deadline": "2026-09-10"}}]}, {"label": "Topps 近期发行预告", "color": "#10b981", "items": [{"title": "2025-26 Topps Chrome 更新篮球·蓝宝石版", "orig": "2025-26 Topps Chrome Updates Basketball Sapphire Edition", "source": "Topps 发行日历", "url": "https://www.topps.com/release-calendar", "summary": "高端蓝宝石平行篮球盒，9/3–9/17 发售窗口，收藏向高溢价。", "players": [{"name": "众 NBA 球星", "team": "NBA", "pos": "—", "note": "Chrome 系列以折射平行与签名著称。"}], "dates": {"release": "2026-09-03", "status": "发售窗口至 9/17"}}, {"title": "2026 Bowman 橄榄球·首发限定", "orig": "2026 Bowman Football - First Day Issue", "source": "Topps 发行日历", "url": "https://www.topps.com/release-calendar", "summary": "橄榄球新秀卡风向标，9/5 首发限定，含潜力新秀签名。", "players": [{"name": "2026 届橄榄球新秀", "team": "NFL", "pos": "—", "note": "Bowman 以新秀首卡（1st Bowman）闻名。"}], "dates": {"release": "2026-09-05"}}, {"title": "2026 Topps Allen & Ginter 棒球", "orig": "2026 Topps Allen & Ginter Baseball", "source": "Topps 发行日历", "url": "https://www.topps.com/release-calendar", "summary": "复古跨界风格棒球盒，9/8 预售，含非体育名人插入卡。", "players": [], "dates": {"release": "2026-09-08"}}, {"title": "2026 Topps 博物馆典藏棒球", "orig": "2026 Topps Museum Collection Baseball", "source": "Topps 发行日历", "url": "https://www.topps.com/release-calendar", "summary": "高端典藏棒球盒，9/9 发售，含绣片与签名 relic 卡。", "players": [], "dates": {"release": "2026-09-09"}}, {"title": "2026 Bowman Chrome 棒球", "orig": "2026 Bowman Chrome Baseball", "source": "Topps 发行日历", "url": "https://www.topps.com/release-calendar", "summary": "9/10 发售，聚焦潜力新秀 Chrome 折射与 1st 卡。", "players": [{"name": "棒球潜力新秀", "team": "MLB", "pos": "—", "note": "Bowman Chrome 是新秀卡核心系列。"}], "dates": {"release": "2026-09-10"}}, {"title": "2026 Topps Chrome 美职联足球", "orig": "Topps Chrome Major League Soccer 2026", "source": "Topps 发行日历", "url": "https://www.topps.com/release-calendar", "summary": "9/11 发售，MLS 球星 Chrome 折射与签名。", "players": [], "dates": {"release": "2026-09-11"}}, {"title": "2026 Topps 宇宙 WWE", "orig": "2026 Topps Universe WWE", "source": "Topps 发行日历", "url": "https://www.topps.com/release-calendar", "summary": "9/14 预售，摔角娱乐主题卡，含传奇与现役选手。", "players": [], "dates": {"release": "2026-09-14"}}, {"title": "2025-26 Topps 决定性篮球", "orig": "2025-26 Topps Definitive Basketball", "source": "Topps 发行日历", "url": "https://www.topps.com/release-calendar", "summary": "9/17 发售的顶级篮球盒，每盒含多张高编签名。", "players": [{"name": "众 NBA 球星", "team": "NBA", "pos": "—", "note": "Definitive 为 Topps 篮球最高端线。"}], "dates": {"release": "2026-09-17"}}]}, {"label": "Panini 体育球星卡", "color": "#f59e0b", "items": [{"title": "2026 Panini Prizm 世界杯 2026 足球卡", "orig": "2026 Panini Prizm FIFA World Cup 2026 Trading Card Box", "source": "Panini America", "url": "https://www.paniniamerica.net/", "summary": "约 9/12 开售，500 张基底 + 86 种平行 + 12 类签名，巨星云集。", "players": [{"name": "基利安·姆巴佩", "team": "皇家马德里", "pos": "前锋", "note": "世界杯冠军，签名卡核心。"}, {"name": "埃尔林·哈兰德", "team": "曼城", "pos": "中锋", "note": "英超金靴，签名卡热门。"}, {"name": "内马尔", "team": "巴西", "pos": "前锋", "note": "桑托斯/国家队，签名卡焦点。"}], "dates": {"release": "2026-09-12"}}, {"title": "2025-26 Panini Select 世界杯之路足球卡", "orig": "2025-26 PANINI Select Road to FIFA World Cup 2026 Soccer Cards", "source": "collectosk", "url": "https://www.collectosk.com/2025-26-panini-select-road-to-fifa-world-cup-2026-soccer-cards/", "summary": "已发售（7/22），250 基底 + 46 平行，含梅西/姆巴佩/哈兰德签名。", "players": [{"name": "莱昂内尔·梅西", "team": "阿根廷 / 国际迈阿密", "pos": "前锋", "note": "签名 relic 卡核心球员。"}, {"name": "基利安·姆巴佩", "team": "皇家马德里", "pos": "前锋", "note": "签名卡核心。"}, {"name": "埃尔林·哈兰德", "team": "曼城", "pos": "中锋", "note": "签名卡热门。"}], "dates": {"status": "已开售 7/22"}}, {"title": "2025-26 Panini Prizm 篮球卡", "orig": "2025-26 Panini Prizm Basketball", "source": "Panini News", "url": "https://blog.paniniamerica.net/", "summary": "年度人气篮球盒，平行/插入/签名齐备，新老球星同台。", "players": [{"name": "众 NBA 球星", "team": "NBA", "pos": "—", "note": "Prizm 为 Panini 篮球标志性折射系列。"}], "dates": {"status": "已开售"}}, {"title": "2026 Panini Donruss WNBA 篮球卡", "orig": "2026 Panini Donruss WNBA Trading Card Box", "source": "Panini America", "url": "https://www.paniniamerica.net/", "summary": "约 9/16 开售，WNBA 球星卡，含 Rated Rookie 新秀。", "players": [{"name": "WNBA 球星", "team": "WNBA", "pos": "—", "note": "Donruss 以 Rated Rookie 新秀卡闻名。"}], "dates": {"release": "2026-09-16"}}, {"title": "2026 Panini Prizm 棒球卡", "orig": "2026 Panini Prizm Baseball Trading Card Box", "source": "Panini America", "url": "https://www.paniniamerica.net/", "summary": "约 9/16 开售，Panini 棒球折射系列（非 MLB 授权，聚焦名宿/新秀）。", "players": [], "dates": {"release": "2026-09-16"}}, {"title": "Panini 2026 Turn Four 赛车卡", "orig": "Panini 2026 Turn Four Racing", "source": "Panini News", "url": "https://blog.paniniamerica.net/", "summary": "已发售（8/6），赛车主题卡，FOTL 采用荷兰式拍卖。", "players": [], "dates": {"status": "已开售 8/6"}}, {"title": "Panini 2026 Decades 90s 多运动卡", "orig": "2026 Panini Decades 90s Multi-Sport Trading Cards", "source": "Panini News", "url": "https://blog.paniniamerica.net/", "summary": "已发售（8/5），复古 90 年代跨界多运动卡，情怀向。", "players": [], "dates": {"status": "已开售 8/5"}}, {"title": "索尼克赛车主题交易卡", "orig": "Sonic the Hedgehog Racing into Collecting", "source": "Panini News", "url": "https://blog.paniniamerica.net/", "summary": "已发售（8/27），索尼克宇宙角色卡，含英雄与反派。", "players": [], "dates": {"status": "已开售 8/27"}}, {"title": "2026 Panini INTL 英格兰足球卡", "orig": "2026 Panini INTL England Football Trading Cards", "source": "Panini UK", "url": "https://www.panini.co.uk/shp_gbr_en/blog/sticker-and-trading-card-collections/", "summary": "已发售（8/12），每盒约 20 张基底 + 6 插入 + 4 平行。", "players": [{"name": "英格兰球员", "team": "英格兰", "pos": "—", "note": "INTL 为 Panini 英格兰国家队系列。"}], "dates": {"status": "已开售 8/12"}}]}, {"label": "Panini 娱乐 / 收藏卡", "color": "#0ea5e9", "items": [{"title": "哈利波特 ALWAYS 金属典藏宝盒", "orig": "Harry Potter ALWAYS Trading Card Treasure Boxes", "source": "Panini UK", "url": "https://www.panini.co.uk/shp_gbr_en/blog/sticker-and-trading-card-collections/", "summary": "预售中（9/2），含专属卡与限量真·金属 MetalForge 卡。", "players": [], "dates": {"status": "预售中"}}, {"title": "Hello Kitty 与好友贴纸收藏", "orig": "Hello Kitty and Friends Sticker Collection", "source": "Panini UK", "url": "https://www.panini.co.uk/shp_gbr_en/blog/sticker-and-trading-card-collections/", "summary": "已发售（8/27），凯蒂猫、美乐蒂、库洛米等角色贴纸册。", "players": [], "dates": {"status": "已开售 8/27"}}, {"title": "Squishmallows 贴纸收藏", "orig": "Squishmallows It's Giving Squish! Sticker Collection", "source": "Panini UK", "url": "https://www.panini.co.uk/shp_gbr_en/blog/sticker-and-trading-card-collections/", "summary": "已发售（8/26），2026 官方 Squishmallows 贴纸收藏册。", "players": [], "dates": {"status": "已开售 8/26"}}, {"title": "Adrenalyn XL FIFA 365 – 2027 开赛多包", "orig": "Adrenalyn XL FIFA 365 – 2027 Kick-Off Multipack", "source": "Panini UK", "url": "https://www.panini.co.uk/shp_gbr_en/blog/sticker-and-trading-card-collections/", "summary": "已发售（8/25），137 张预览卡抢先开启 2027 足球旅程。", "players": [], "dates": {"status": "已开售 8/25"}}, {"title": "Minecraft 贴纸收藏", "orig": "Minecraft Stay Adventurous Sticker Collection", "source": "Panini UK", "url": "https://www.panini.co.uk/shp_gbr_en/blog/sticker-and-trading-card-collections/", "summary": "已发售（8/13），试炼密室原创剧情贴纸册。", "players": [], "dates": {"status": "已开售 8/13"}}, {"title": "蜘蛛侠·解锁你的力量贴纸收藏", "orig": "Spider-Man Unlock Your Powers Sticker Collection", "source": "Panini UK", "url": "https://www.panini.co.uk/shp_gbr_en/blog/sticker-and-trading-card-collections/", "summary": "已发售（7/30），动作炫彩蜘蛛侠贴纸册。", "players": [], "dates": {"status": "已开售 7/30"}}, {"title": "玩具总动员 5 贴纸收藏", "orig": "Toy Story 5 Sticker Collection", "source": "Panini UK", "url": "https://www.panini.co.uk/shp_gbr_en/blog/sticker-and-trading-card-collections/", "summary": "已发售（7/28），迪士尼皮克斯电影主题互动贴纸册。", "players": [], "dates": {"status": "已开售 7/28"}}]}, {"label": "球员动态与市场观察", "color": "#f43f5e", "items": [{"title": "梅西退出国家队国际赛，Topps NOW 推纪念系列", "orig": "Topps NOW The End Of An Era - Messi Retires From International Football", "source": "Topps / 行业", "url": "https://www.topps.com/collections/topps-now", "summary": "梅西国家队谢幕催热相关卡需求，纪念卡具备收藏叙事价值。", "players": [{"name": "莱昂内尔·梅西", "team": "阿根廷 / 国际迈阿密", "pos": "前锋", "note": "退役国际赛推动其卡价与纪念卡关注度。"}]}, {"title": "大谷翔平 50/50 1-of-1 领衔 Topps NOW 最佳卡", "orig": "Shohei Ohtani's 50/50 One-of-One Headlines His Best Topps NOW Cards", "source": "Topps / 行业", "url": "https://www.topps.com/collections/topps-now", "summary": "2024 达成 50 全垒打 50 盗垒的 1-of-1 卡成焦点，溢价显著。", "players": [{"name": "大谷翔平", "team": "洛杉矶道奇", "pos": "投手 / 指定打击", "note": "2024 年达成史无前例 50/50 赛季。"}]}, {"title": "姆巴佩/哈兰德/内马尔签名卡登陆世界杯系列", "orig": "Legends and Debutants Alike Made FIFA World Cup 2026 Unforgettable", "source": "Panini News", "url": "https://blog.paniniamerica.net/", "summary": "世界杯系列签名卡覆盖现役巨星与传奇，拉动高端盒需求。", "players": [{"name": "基利安·姆巴佩", "team": "皇家马德里", "pos": "前锋", "note": "签名卡核心。"}, {"name": "埃尔林·哈兰德", "team": "曼城", "pos": "中锋", "note": "签名卡热门。"}, {"name": "内马尔", "team": "巴西", "pos": "前锋", "note": "签名卡焦点。"}]}, {"title": "Panini 每周赎回卡（Redemption）进度更新", "orig": "Panini Weekly Redemption Card Updates", "source": "Panini News", "url": "https://blog.paniniamerica.net/", "summary": "Panini 每周五更新未兑现签名/实物卡履约进度，影响二手流通。", "players": []}, {"title": "2025-26 Panini Prizm 篮球：新老球星碰撞", "orig": "Stars New and Old Collide in 2025-26 Panini Prizm Basketball", "source": "Panini News", "url": "https://blog.paniniamerica.net/", "summary": "Prizm 篮球平行与签名涵盖多时代球星，是休赛期热门盒。", "players": [{"name": "众 NBA 球星", "team": "NBA", "pos": "—", "note": "Prizm 为篮球卡市场风向标。"}]}]}], "flashes": []};
+window.DASHBOARD_CONFIG={
+  defaultDate:'2026-09-10',
+  isPower:false,
+  embedded:EMB,
+  fetchDaily: async function(dateStr){
+    if(dateStr==='2026-09-10') return EMB;
+    try{ const r=await fetch('data/card-'+dateStr+'.json',{headers:{'Accept':'application/json'}}); if(!r.ok) return null; return await r.json(); }catch(e){ return null; }
+  }
+};</script>
+<script>
+(function(){
+  const CFG = window.DASHBOARD_CONFIG || {};
+  const embedded = CFG.embedded;
+  const defaultDate = CFG.defaultDate || (embedded && embedded.date);
+  const isPower = !!CFG.isPower;
+  const $ = id => document.getElementById(id);
+  let lastData = embedded;
+  function esc(s){return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+  function fmtDateCN(ds){if(!ds)return '';const dt=new Date(ds+'T00:00:00Z');const wk=['周日','周一','周二','周三','周四','周五','周六'][dt.getUTCDay()];const p=n=>ds.split('-')[n];return (+p(0))+' 年 '+(+p(1))+' 月 '+(+p(2))+' 日 · '+wk;}
+  function trunc(s,n){s=s||'';const a=Array.from(s);return a.length<=n?s:a.slice(0,n).join('')+'…';}
+  function prevDay(s){const d=new Date(s+'T00:00:00Z');d.setUTCDate(d.getUTCDate()-1);return d.toISOString().slice(0,10);}
+  function totalOf(data){return (data.sections||[]).reduce((a,s)=>a+((s.items&&s.items.length)||0),0);}
+
+  function fmtDateShort(s){if(!s)return '';const p=s.split('-');return (+p[1])+'月'+(+p[2])+'日';}
+  function renderDates(dates,todayStr){
+    if(!dates)return '';
+    const today=new Date(todayStr+'T00:00:00Z');
+    const out=[];
+    if(dates.deadline){
+      const d=new Date(dates.deadline+'T00:00:00Z');
+      const diff=Math.round((d-today)/86400000);
+      let cls,label;
+      if(diff<0){cls='overdue';label='已截止 '+fmtDateShort(dates.deadline);}
+      else if(diff===0){cls='urgent';label='⏰ 今天截止！';}
+      else if(diff===1){cls='urgent';label='⏰ 明天截止';}
+      else if(diff<=3){cls='soon';label='⏰ 还剩 '+diff+' 天截止';}
+      else if(diff<=7){cls='soon';label='⏰ '+diff+' 天后截止';}
+      else{cls='normal';label='⏰ 截止 '+fmtDateShort(dates.deadline);}
+      out.push('<span class="badge deadline '+cls+'">'+esc(label)+'</span>');
+    }
+    if(dates.release){
+      const d=new Date(dates.release+'T00:00:00Z');
+      const diff=Math.round((d-today)/86400000);
+      const cls='release';
+      let label;
+      if(diff>0){label='📅 '+diff+' 天后开售 ('+fmtDateShort(dates.release)+')';}
+      else if(diff===0){label='📅 今天开售！';}
+      else{label='📅 已开售 '+fmtDateShort(dates.release);}
+      out.push('<span class="badge '+cls+'">'+esc(label)+'</span>');
+    }
+    if(dates.status){
+      out.push('<span class="badge status">'+esc(dates.status)+'</span>');
+    }
+    return out.length?'<div class="badges">'+out.join('')+'</div>':'';
+  }
+  function render(data){
+    lastData = data;
+    document.body.dataset.date = data.date || '';
+    document.body.dataset.title = data.title || '';
+    $('title').textContent = data.title || '日报';
+    $('kicker').textContent = data.kicker || '';
+    $('dateLine').textContent = fmtDateCN(data.date);
+    const statsEl=$('stats'); statsEl.innerHTML='';
+    const t=document.createElement('div'); t.className='stat total';
+    t.innerHTML='<div class="n">'+totalOf(data)+'</div><div class="l">总条数</div>';
+    statsEl.appendChild(t);
+    (data.sections||[]).forEach(s=>{
+      const el=document.createElement('div'); el.className='stat';
+      el.style.background='color-mix(in srgb,'+s.color+' 16%,#fff)';
+      el.style.borderColor='color-mix(in srgb,'+s.color+' 30%,#fff)';
+      el.innerHTML='<div class="n" style="color:'+s.color+'">'+s.items.length+'</div><div class="l">'+esc(s.label)+'</div>';
+      statsEl.appendChild(el);
+    });
+    const navEl=$('nav'); navEl.innerHTML='';
+    (data.sections||[]).forEach((s,i)=>{
+      const a=document.createElement('a'); a.href='#sec-'+i;
+      a.innerHTML='<span class="dot" style="background:'+s.color+'"></span>'+esc(s.label)+'<span class="c">'+s.items.length+'</span>';
+      navEl.appendChild(a);
+    });
+    const main=$('main'); main.innerHTML='';
+    let g=0;
+    (data.sections||[]).forEach((s,i)=>{
+      const sec=document.createElement('section'); sec.className='section'; sec.id='sec-'+i;
+      const h=document.createElement('div'); h.className='sec-head';
+      h.innerHTML='<div class="sec-bar" style="background:'+s.color+'"></div><h2>'+esc(s.label)+'</h2><span class="cnt">'+s.items.length+' 条</span>';
+      sec.appendChild(h);
+      const grid=document.createElement('div'); grid.className='grid';
+      (s.items||[]).forEach(it=>{
+        g++;
+        const playersHtml = (it.players && it.players.length) ? (
+          '<div class="players"><div class="pl-h">球员资料</div>' +
+          it.players.map(p=>'<div class="pl"><span class="pl-n">'+esc(p.name)+'</span>' +
+            (p.team?'<span class="pl-m">'+esc(p.team)+'</span>':'') +
+            (p.pos?'<span class="pl-m">'+esc(p.pos)+'</span>':'') +
+            (p.note?'<span class="pl-x">'+esc(p.note)+'</span>':'') +
+            '</div>').join('') + '</div>'
+        ) : '';
+        const c=document.createElement('article'); c.className='card';
+        c.style.setProperty('--accent',s.color);
+        c.innerHTML='<div class="card-top"><div class="num">'+g+'</div><span class="chip">'+esc(it.source||'')+'</span></div>'+
+          '<h3><a href="'+esc(it.url||'#')+'" target="_blank" rel="noopener noreferrer">'+esc(it.title||'')+'</a></h3>'+
+          (it.orig?'<div class="orig">原名：'+esc(it.orig)+'</div>':'')+
+          renderDates(it.dates, defaultDate)+
+          '<p class="sum">'+esc(trunc(it.summary,60))+'</p>'+
+          playersHtml+
+          '<a class="read" href="'+esc(it.url||'#')+'" target="_blank" rel="noopener noreferrer">阅读原文 →</a>';
+        grid.appendChild(c);
+      });
+      sec.appendChild(grid); main.appendChild(sec);
+    });
+    if(data.flashes && data.flashes.length){
+      const sec=document.createElement('section'); sec.className='section'; sec.id='flashes';
+      const h=document.createElement('div'); h.className='sec-head';
+      h.innerHTML='<div class="sec-bar" style="background:#ef4444"></div><h2>快讯</h2><span class="cnt">'+data.flashes.length+' 条</span>';
+      sec.appendChild(h);
+      const grid=document.createElement('div'); grid.className='flash-grid';
+      data.flashes.forEach(fl=>{
+        const el=document.createElement('div'); el.className='flash';
+        el.innerHTML='<div class="ft"><a href="'+esc(fl.url||'#')+'" target="_blank" rel="noopener noreferrer">'+esc(fl.title||'')+'</a></div><div>'+esc(fl.source||'')+'</div>';
+        grid.appendChild(el);
+      });
+      sec.appendChild(grid); main.appendChild(sec);
+    }
+    $('footCount').textContent='本期共 '+totalOf(data)+' 条动态';
+    $('footSrc').innerHTML='数据源：<strong>'+esc(data.source||'')+'</strong>';
+    $('footNote').textContent=data.note||'';
+  }
+  function status(msg){const el=$('status'); if(el) el.textContent=msg;}
+  function showData(data,loadedDate,requestedEnd){
+    render(data);
+    let msg='已加载 '+loadedDate+' 的日报（共 '+totalOf(data)+' 条）';
+    if(requestedEnd && requestedEnd!==loadedDate) msg+=' · 结束日期 '+requestedEnd+' 暂无数据，已回退至 '+loadedDate;
+    status(msg);
+  }
+  function showEmpty(dateStr){
+    $('main').innerHTML='<div class="empty" style="grid-column:1/-1">所选日期（'+dateStr+'）暂无可用日报数据。球星卡日报为联网检索快照，需生成对应日期的快照文件（data/card-'+dateStr+'.json）后方可加载。</div>';
+    $('stats').innerHTML=''; $('nav').innerHTML='';
+    $('title').textContent=(embedded&&embedded.title)||'日报';
+    $('kicker').textContent=(embedded&&embedded.kicker)||'';
+    $('dateLine').textContent=fmtDateCN(dateStr); $('genLine').textContent='';
+    $('footCount').textContent=''; $('footSrc').textContent=''; $('footNote').textContent='';
+    status('未找到 '+dateStr+' 的日报');
+  }
+  function wire(){
+    const startInp=$('startDate'), endInp=$('endDate'), btn=$('refreshBtn');
+    if(!startInp||!endInp||!btn) return;
+    const today=defaultDate;
+    startInp.max=endInp.max=today;
+    startInp.value=endInp.value=today;
+    btn.addEventListener('click', async ()=>{
+      let s=startInp.value, e=endInp.value;
+      if(!s||!e){ status('请选择起始日期和结束日期'); return; }
+      if(e<s){ const tmp=s; s=e; e=tmp; startInp.value=s; endInp.value=e; }
+      status('正在加载…');
+      let found=false, data=null, date=null;
+      for(let d=e; d>=s; d=prevDay(d)){
+        const dd = await CFG.fetchDaily(d);
+        if(dd){ found=true; data=dd; date=d; break; }
+        if(d===s) break;
+      }
+      if(found) showData(data, date, e);
+      else showEmpty(e);
+    });
+  }
+  function exportPDF(){
+    if(!lastData){ alert('内容尚未加载'); return; }
+    status('正在打开打印对话框…');
+    setTimeout(()=>{ try{ window.print(); }catch(e){ status('打印失败：'+e.message); } }, 50);
+  }
+  async function exportImage(){
+    const hero=document.querySelector('.hero');
+    const main=document.getElementById('main');
+    const footer=document.querySelector('footer');
+    if(!hero||!main){ alert('内容尚未加载'); return; }
+    const prev=document.getElementById('status')?document.getElementById('status').textContent:'';
+    status('正在生成图片…');
+    try{
+      const styleText=(document.querySelector('style')||{}).textContent||'';
+      const w=Math.max(hero.scrollWidth, main.scrollWidth, 900);
+      const clean=n=>{const c=n.cloneNode(true);c.querySelectorAll('*').forEach(el=>{if(el.style)el.style.animation='none';});return c;};
+      const inner=clean(hero).outerHTML+clean(main).outerHTML+(footer?clean(footer).outerHTML:'');
+      const measureHTML='<div style="background:#fff;width:'+w+'px"><style>'+styleText+'</style><div style="padding:0">'+inner+'</div></div>';
+      const measure=document.createElement('div');
+      measure.style.cssText='position:fixed;left:-99999px;top:0;background:#fff;';
+      measure.innerHTML=measureHTML;
+      document.body.appendChild(measure);
+      const h=measure.scrollHeight;
+      document.body.removeChild(measure);
+      const xhtml='<div xmlns="http://www.w3.org/1999/xhtml" style="background:#fff;width:'+w+'px"><style>'+styleText+'</style><div style="padding:0">'+inner+'</div></div>';
+      const svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'"><foreignObject x="0" y="0" width="'+w+'" height="'+h+'">'+xhtml+'</foreignObject></svg>';
+      const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'});
+      const url=URL.createObjectURL(blob);
+      const img=new Image();
+      await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(new Error('SVG 渲染失败（浏览器可能阻止了 foreignObject）'));img.src=url;});
+      const scale=2;
+      const canvas=document.createElement('canvas');
+      canvas.width=w*scale; canvas.height=h*scale;
+      const ctx=canvas.getContext('2d');
+      ctx.fillStyle='#ffffff';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.drawImage(img,0,0,w,h);
+      await new Promise((resolve)=>{
+        canvas.toBlob((b)=>{
+          const a=document.createElement('a');
+          a.href=URL.createObjectURL(b);
+          const dt=document.body.dataset.date||'export';
+          const ttl=(document.body.dataset.title||'日报').replace(/[\\\/:*?"<>|]/g,'_');
+          a.download=ttl+'-'+dt+'.png';
+          document.body.appendChild(a); a.click(); document.body.removeChild(a);
+          setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+          resolve();
+        },'image/png');
+      });
+      URL.revokeObjectURL(url);
+      status('图片已导出：'+ttl+'-'+dt+'.png');
+    }catch(e){
+      status('图片导出失败：'+e.message);
+      alert('图片导出失败：'+e.message+'\n\n可改用浏览器"打印 → 另存为 PDF"。');
+    }
+  }
+  function init(){
+    wire();
+    if(embedded) showData(embedded, defaultDate, defaultDate);
+    if(CFG.fetchDaily){
+      CFG.fetchDaily(defaultDate).then(live=>{ if(live) showData(live, defaultDate, defaultDate); }).catch(()=>{});
+    }
+    const pBtn=$('exportPdfBtn'); if(pBtn) pBtn.addEventListener('click', exportPDF);
+    const iBtn=$('exportImgBtn'); if(iBtn) iBtn.addEventListener('click', exportImage);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+</body>
+</html>

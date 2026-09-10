@@ -1,0 +1,598 @@
+{
+ "date": "2026-09-10",
+ "source": "Topps NOW / Panini 官网 / 行业媒体（联网检索）",
+ "note": "检索日期 2026-09-10，参考 Topps NOW、Topps 发行日历、Panini America/UK 官网及行业媒体。球星卡日报为联网检索快照，无实时 API；其他日期需生成对应快照文件（data/card-YYYY-MM-DD.json）后，刷新按钮方可加载。",
+ "title": "球星卡日报",
+ "kicker": "球星卡 · 每日早报（Topps NOW / Panini）",
+ "sections": [
+  {
+   "label": "Topps NOW 即时卡（球星聚焦）",
+   "color": "#6366f1",
+   "items": [
+    {
+     "title": "梅西 2026 阿根廷 Topps NOW 第 1 卡（国际赛退役纪念）",
+     "orig": "Lionel Messi - 2026 Argentina Topps NOW - Card 1",
+     "source": "Topps NOW",
+     "url": "https://www.topps.com/collections/topps-now",
+     "summary": "梅西阿根廷国家队谢幕主题卡，限 9/11 前发售，含潜力签名版本。",
+     "players": [
+      {
+       "name": "莱昂内尔·梅西",
+       "team": "阿根廷 / 国际迈阿密",
+       "pos": "前锋",
+       "note": "世界杯·美洲杯·多届金球奖得主；2026 年退出阿根廷国家队国际赛。"
+      }
+     ],
+     "dates": {
+      "deadline": "2026-09-11"
+     }
+    },
+    {
+     "title": "村上宗隆 2026 MLB Topps NOW 第 638 卡",
+     "orig": "Munetaka Murakami - 2026 MLB Topps NOW - Card 638",
+     "source": "Topps NOW",
+     "url": "https://www.topps.com/collections/topps-now",
+     "summary": "日本棒球代表核心强打者焦点卡，限 9/10 前发售，含签名潜力。",
+     "players": [
+      {
+       "name": "村上宗隆",
+       "team": "东京养乐多燕子（日职棒）",
+       "pos": "三垒手",
+       "note": "2022 年单季 56 支全垒打刷新日本纪录。"
+      }
+     ],
+     "dates": {
+      "deadline": "2026-09-10"
+     }
+    },
+    {
+     "title": "特拉维斯·巴扎纳 2026 MLB Living Set 第 941 卡",
+     "orig": "Travis Bazzana - 2026 MLB Living Set - Card 941",
+     "source": "Topps NOW",
+     "url": "https://www.topps.com/collections/topps-now",
+     "summary": "2024 年选秀状元连载系列卡，限 9/11 前发售。",
+     "players": [
+      {
+       "name": "特拉维斯·巴扎纳",
+       "team": "克利夫兰守护者",
+       "pos": "二垒手",
+       "note": "2024 年 MLB 选秀状元，首位澳大利亚籍状元。"
+      }
+     ],
+     "dates": {
+      "deadline": "2026-09-11"
+     }
+    },
+    {
+     "title": "拉明·亚马尔 2026-27 巴萨 Topps NOW 第 2 卡",
+     "orig": "Lamine Yamal - 2026-27 FC Barcelona Topps NOW - Card 2",
+     "source": "Topps NOW",
+     "url": "https://www.topps.com/collections/topps-now",
+     "summary": "巴萨天才边锋焦点卡，限 9/11 前发售，含签名潜力。",
+     "players": [
+      {
+       "name": "拉明·亚马尔",
+       "team": "巴塞罗那",
+       "pos": "边锋",
+       "note": "2007 年生，2024 欧洲杯冠军暨最年轻出场球员之一。"
+      }
+     ],
+     "dates": {
+      "deadline": "2026-09-11"
+     }
+    },
+    {
+     "title": "布鲁诺·费尔南德斯 2026-27 英超 Topps NOW 第 14 卡",
+     "orig": "Bruno Fernandes - 2026-27 Premier League Topps NOW - Card 14",
+     "source": "Topps NOW",
+     "url": "https://www.topps.com/collections/topps-now",
+     "summary": "曼联队长英超焦点卡，限 9/10 前发售。",
+     "players": [
+      {
+       "name": "布鲁诺·费尔南德斯",
+       "team": "曼联",
+       "pos": "中场 / 队长",
+       "note": "葡萄牙国脚，球队组织核心。"
+      }
+     ],
+     "dates": {
+      "deadline": "2026-09-10"
+     }
+    },
+    {
+     "title": "卢卡斯·佩特科夫 2026-27 德甲 Topps NOW 第 7 卡",
+     "orig": "Lukas Petkov - 2026-27 Bundesliga Topps NOW - Card 7",
+     "source": "Topps NOW",
+     "url": "https://www.topps.com/collections/topps-now",
+     "summary": "德甲新锐焦点卡，限 9/10 前发售。",
+     "players": [
+      {
+       "name": "卢卡斯·佩特科夫",
+       "team": "德甲",
+       "pos": "中场 / 前锋",
+       "note": "德甲新生代进攻球员。"
+      }
+     ],
+     "dates": {
+      "deadline": "2026-09-10"
+     }
+    },
+    {
+     "title": "尤尼斯·埃布努塔利布 2026-27 德甲 Topps NOW 第 6 卡",
+     "orig": "Younes Ebnoutalib - 2026-27 Bundesliga Topps NOW - Card 6",
+     "source": "Topps NOW",
+     "url": "https://www.topps.com/collections/topps-now",
+     "summary": "德甲新锐焦点卡，限 9/10 前发售。",
+     "players": [
+      {
+       "name": "尤尼斯·埃布努塔利布",
+       "team": "德甲",
+       "pos": "中场 / 前锋",
+       "note": "德甲新生代球员。"
+      }
+     ],
+     "dates": {
+      "deadline": "2026-09-10"
+     }
+    }
+   ]
+  },
+  {
+   "label": "Topps 近期发行预告",
+   "color": "#10b981",
+   "items": [
+    {
+     "title": "2025-26 Topps Chrome 更新篮球·蓝宝石版",
+     "orig": "2025-26 Topps Chrome Updates Basketball Sapphire Edition",
+     "source": "Topps 发行日历",
+     "url": "https://www.topps.com/release-calendar",
+     "summary": "高端蓝宝石平行篮球盒，9/3–9/17 发售窗口，收藏向高溢价。",
+     "players": [
+      {
+       "name": "众 NBA 球星",
+       "team": "NBA",
+       "pos": "—",
+       "note": "Chrome 系列以折射平行与签名著称。"
+      }
+     ],
+     "dates": {
+      "release": "2026-09-03",
+      "status": "发售窗口至 9/17"
+     }
+    },
+    {
+     "title": "2026 Bowman 橄榄球·首发限定",
+     "orig": "2026 Bowman Football - First Day Issue",
+     "source": "Topps 发行日历",
+     "url": "https://www.topps.com/release-calendar",
+     "summary": "橄榄球新秀卡风向标，9/5 首发限定，含潜力新秀签名。",
+     "players": [
+      {
+       "name": "2026 届橄榄球新秀",
+       "team": "NFL",
+       "pos": "—",
+       "note": "Bowman 以新秀首卡（1st Bowman）闻名。"
+      }
+     ],
+     "dates": {
+      "release": "2026-09-05"
+     }
+    },
+    {
+     "title": "2026 Topps Allen & Ginter 棒球",
+     "orig": "2026 Topps Allen & Ginter Baseball",
+     "source": "Topps 发行日历",
+     "url": "https://www.topps.com/release-calendar",
+     "summary": "复古跨界风格棒球盒，9/8 预售，含非体育名人插入卡。",
+     "players": [],
+     "dates": {
+      "release": "2026-09-08"
+     }
+    },
+    {
+     "title": "2026 Topps 博物馆典藏棒球",
+     "orig": "2026 Topps Museum Collection Baseball",
+     "source": "Topps 发行日历",
+     "url": "https://www.topps.com/release-calendar",
+     "summary": "高端典藏棒球盒，9/9 发售，含绣片与签名 relic 卡。",
+     "players": [],
+     "dates": {
+      "release": "2026-09-09"
+     }
+    },
+    {
+     "title": "2026 Bowman Chrome 棒球",
+     "orig": "2026 Bowman Chrome Baseball",
+     "source": "Topps 发行日历",
+     "url": "https://www.topps.com/release-calendar",
+     "summary": "9/10 发售，聚焦潜力新秀 Chrome 折射与 1st 卡。",
+     "players": [
+      {
+       "name": "棒球潜力新秀",
+       "team": "MLB",
+       "pos": "—",
+       "note": "Bowman Chrome 是新秀卡核心系列。"
+      }
+     ],
+     "dates": {
+      "release": "2026-09-10"
+     }
+    },
+    {
+     "title": "2026 Topps Chrome 美职联足球",
+     "orig": "Topps Chrome Major League Soccer 2026",
+     "source": "Topps 发行日历",
+     "url": "https://www.topps.com/release-calendar",
+     "summary": "9/11 发售，MLS 球星 Chrome 折射与签名。",
+     "players": [],
+     "dates": {
+      "release": "2026-09-11"
+     }
+    },
+    {
+     "title": "2026 Topps 宇宙 WWE",
+     "orig": "2026 Topps Universe WWE",
+     "source": "Topps 发行日历",
+     "url": "https://www.topps.com/release-calendar",
+     "summary": "9/14 预售，摔角娱乐主题卡，含传奇与现役选手。",
+     "players": [],
+     "dates": {
+      "release": "2026-09-14"
+     }
+    },
+    {
+     "title": "2025-26 Topps 决定性篮球",
+     "orig": "2025-26 Topps Definitive Basketball",
+     "source": "Topps 发行日历",
+     "url": "https://www.topps.com/release-calendar",
+     "summary": "9/17 发售的顶级篮球盒，每盒含多张高编签名。",
+     "players": [
+      {
+       "name": "众 NBA 球星",
+       "team": "NBA",
+       "pos": "—",
+       "note": "Definitive 为 Topps 篮球最高端线。"
+      }
+     ],
+     "dates": {
+      "release": "2026-09-17"
+     }
+    }
+   ]
+  },
+  {
+   "label": "Panini 体育球星卡",
+   "color": "#f59e0b",
+   "items": [
+    {
+     "title": "2026 Panini Prizm 世界杯 2026 足球卡",
+     "orig": "2026 Panini Prizm FIFA World Cup 2026 Trading Card Box",
+     "source": "Panini America",
+     "url": "https://www.paniniamerica.net/",
+     "summary": "约 9/12 开售，500 张基底 + 86 种平行 + 12 类签名，巨星云集。",
+     "players": [
+      {
+       "name": "基利安·姆巴佩",
+       "team": "皇家马德里",
+       "pos": "前锋",
+       "note": "世界杯冠军，签名卡核心。"
+      },
+      {
+       "name": "埃尔林·哈兰德",
+       "team": "曼城",
+       "pos": "中锋",
+       "note": "英超金靴，签名卡热门。"
+      },
+      {
+       "name": "内马尔",
+       "team": "巴西",
+       "pos": "前锋",
+       "note": "桑托斯/国家队，签名卡焦点。"
+      }
+     ],
+     "dates": {
+      "release": "2026-09-12"
+     }
+    },
+    {
+     "title": "2025-26 Panini Select 世界杯之路足球卡",
+     "orig": "2025-26 PANINI Select Road to FIFA World Cup 2026 Soccer Cards",
+     "source": "collectosk",
+     "url": "https://www.collectosk.com/2025-26-panini-select-road-to-fifa-world-cup-2026-soccer-cards/",
+     "summary": "已发售（7/22），250 基底 + 46 平行，含梅西/姆巴佩/哈兰德签名。",
+     "players": [
+      {
+       "name": "莱昂内尔·梅西",
+       "team": "阿根廷 / 国际迈阿密",
+       "pos": "前锋",
+       "note": "签名 relic 卡核心球员。"
+      },
+      {
+       "name": "基利安·姆巴佩",
+       "team": "皇家马德里",
+       "pos": "前锋",
+       "note": "签名卡核心。"
+      },
+      {
+       "name": "埃尔林·哈兰德",
+       "team": "曼城",
+       "pos": "中锋",
+       "note": "签名卡热门。"
+      }
+     ],
+     "dates": {
+      "status": "已开售 7/22"
+     }
+    },
+    {
+     "title": "2025-26 Panini Prizm 篮球卡",
+     "orig": "2025-26 Panini Prizm Basketball",
+     "source": "Panini News",
+     "url": "https://blog.paniniamerica.net/",
+     "summary": "年度人气篮球盒，平行/插入/签名齐备，新老球星同台。",
+     "players": [
+      {
+       "name": "众 NBA 球星",
+       "team": "NBA",
+       "pos": "—",
+       "note": "Prizm 为 Panini 篮球标志性折射系列。"
+      }
+     ],
+     "dates": {
+      "status": "已开售"
+     }
+    },
+    {
+     "title": "2026 Panini Donruss WNBA 篮球卡",
+     "orig": "2026 Panini Donruss WNBA Trading Card Box",
+     "source": "Panini America",
+     "url": "https://www.paniniamerica.net/",
+     "summary": "约 9/16 开售，WNBA 球星卡，含 Rated Rookie 新秀。",
+     "players": [
+      {
+       "name": "WNBA 球星",
+       "team": "WNBA",
+       "pos": "—",
+       "note": "Donruss 以 Rated Rookie 新秀卡闻名。"
+      }
+     ],
+     "dates": {
+      "release": "2026-09-16"
+     }
+    },
+    {
+     "title": "2026 Panini Prizm 棒球卡",
+     "orig": "2026 Panini Prizm Baseball Trading Card Box",
+     "source": "Panini America",
+     "url": "https://www.paniniamerica.net/",
+     "summary": "约 9/16 开售，Panini 棒球折射系列（非 MLB 授权，聚焦名宿/新秀）。",
+     "players": [],
+     "dates": {
+      "release": "2026-09-16"
+     }
+    },
+    {
+     "title": "Panini 2026 Turn Four 赛车卡",
+     "orig": "Panini 2026 Turn Four Racing",
+     "source": "Panini News",
+     "url": "https://blog.paniniamerica.net/",
+     "summary": "已发售（8/6），赛车主题卡，FOTL 采用荷兰式拍卖。",
+     "players": [],
+     "dates": {
+      "status": "已开售 8/6"
+     }
+    },
+    {
+     "title": "Panini 2026 Decades 90s 多运动卡",
+     "orig": "2026 Panini Decades 90s Multi-Sport Trading Cards",
+     "source": "Panini News",
+     "url": "https://blog.paniniamerica.net/",
+     "summary": "已发售（8/5），复古 90 年代跨界多运动卡，情怀向。",
+     "players": [],
+     "dates": {
+      "status": "已开售 8/5"
+     }
+    },
+    {
+     "title": "索尼克赛车主题交易卡",
+     "orig": "Sonic the Hedgehog Racing into Collecting",
+     "source": "Panini News",
+     "url": "https://blog.paniniamerica.net/",
+     "summary": "已发售（8/27），索尼克宇宙角色卡，含英雄与反派。",
+     "players": [],
+     "dates": {
+      "status": "已开售 8/27"
+     }
+    },
+    {
+     "title": "2026 Panini INTL 英格兰足球卡",
+     "orig": "2026 Panini INTL England Football Trading Cards",
+     "source": "Panini UK",
+     "url": "https://www.panini.co.uk/shp_gbr_en/blog/sticker-and-trading-card-collections/",
+     "summary": "已发售（8/12），每盒约 20 张基底 + 6 插入 + 4 平行。",
+     "players": [
+      {
+       "name": "英格兰球员",
+       "team": "英格兰",
+       "pos": "—",
+       "note": "INTL 为 Panini 英格兰国家队系列。"
+      }
+     ],
+     "dates": {
+      "status": "已开售 8/12"
+     }
+    }
+   ]
+  },
+  {
+   "label": "Panini 娱乐 / 收藏卡",
+   "color": "#0ea5e9",
+   "items": [
+    {
+     "title": "哈利波特 ALWAYS 金属典藏宝盒",
+     "orig": "Harry Potter ALWAYS Trading Card Treasure Boxes",
+     "source": "Panini UK",
+     "url": "https://www.panini.co.uk/shp_gbr_en/blog/sticker-and-trading-card-collections/",
+     "summary": "预售中（9/2），含专属卡与限量真·金属 MetalForge 卡。",
+     "players": [],
+     "dates": {
+      "status": "预售中"
+     }
+    },
+    {
+     "title": "Hello Kitty 与好友贴纸收藏",
+     "orig": "Hello Kitty and Friends Sticker Collection",
+     "source": "Panini UK",
+     "url": "https://www.panini.co.uk/shp_gbr_en/blog/sticker-and-trading-card-collections/",
+     "summary": "已发售（8/27），凯蒂猫、美乐蒂、库洛米等角色贴纸册。",
+     "players": [],
+     "dates": {
+      "status": "已开售 8/27"
+     }
+    },
+    {
+     "title": "Squishmallows 贴纸收藏",
+     "orig": "Squishmallows It's Giving Squish! Sticker Collection",
+     "source": "Panini UK",
+     "url": "https://www.panini.co.uk/shp_gbr_en/blog/sticker-and-trading-card-collections/",
+     "summary": "已发售（8/26），2026 官方 Squishmallows 贴纸收藏册。",
+     "players": [],
+     "dates": {
+      "status": "已开售 8/26"
+     }
+    },
+    {
+     "title": "Adrenalyn XL FIFA 365 – 2027 开赛多包",
+     "orig": "Adrenalyn XL FIFA 365 – 2027 Kick-Off Multipack",
+     "source": "Panini UK",
+     "url": "https://www.panini.co.uk/shp_gbr_en/blog/sticker-and-trading-card-collections/",
+     "summary": "已发售（8/25），137 张预览卡抢先开启 2027 足球旅程。",
+     "players": [],
+     "dates": {
+      "status": "已开售 8/25"
+     }
+    },
+    {
+     "title": "Minecraft 贴纸收藏",
+     "orig": "Minecraft Stay Adventurous Sticker Collection",
+     "source": "Panini UK",
+     "url": "https://www.panini.co.uk/shp_gbr_en/blog/sticker-and-trading-card-collections/",
+     "summary": "已发售（8/13），试炼密室原创剧情贴纸册。",
+     "players": [],
+     "dates": {
+      "status": "已开售 8/13"
+     }
+    },
+    {
+     "title": "蜘蛛侠·解锁你的力量贴纸收藏",
+     "orig": "Spider-Man Unlock Your Powers Sticker Collection",
+     "source": "Panini UK",
+     "url": "https://www.panini.co.uk/shp_gbr_en/blog/sticker-and-trading-card-collections/",
+     "summary": "已发售（7/30），动作炫彩蜘蛛侠贴纸册。",
+     "players": [],
+     "dates": {
+      "status": "已开售 7/30"
+     }
+    },
+    {
+     "title": "玩具总动员 5 贴纸收藏",
+     "orig": "Toy Story 5 Sticker Collection",
+     "source": "Panini UK",
+     "url": "https://www.panini.co.uk/shp_gbr_en/blog/sticker-and-trading-card-collections/",
+     "summary": "已发售（7/28），迪士尼皮克斯电影主题互动贴纸册。",
+     "players": [],
+     "dates": {
+      "status": "已开售 7/28"
+     }
+    }
+   ]
+  },
+  {
+   "label": "球员动态与市场观察",
+   "color": "#f43f5e",
+   "items": [
+    {
+     "title": "梅西退出国家队国际赛，Topps NOW 推纪念系列",
+     "orig": "Topps NOW The End Of An Era - Messi Retires From International Football",
+     "source": "Topps / 行业",
+     "url": "https://www.topps.com/collections/topps-now",
+     "summary": "梅西国家队谢幕催热相关卡需求，纪念卡具备收藏叙事价值。",
+     "players": [
+      {
+       "name": "莱昂内尔·梅西",
+       "team": "阿根廷 / 国际迈阿密",
+       "pos": "前锋",
+       "note": "退役国际赛推动其卡价与纪念卡关注度。"
+      }
+     ]
+    },
+    {
+     "title": "大谷翔平 50/50 1-of-1 领衔 Topps NOW 最佳卡",
+     "orig": "Shohei Ohtani's 50/50 One-of-One Headlines His Best Topps NOW Cards",
+     "source": "Topps / 行业",
+     "url": "https://www.topps.com/collections/topps-now",
+     "summary": "2024 达成 50 全垒打 50 盗垒的 1-of-1 卡成焦点，溢价显著。",
+     "players": [
+      {
+       "name": "大谷翔平",
+       "team": "洛杉矶道奇",
+       "pos": "投手 / 指定打击",
+       "note": "2024 年达成史无前例 50/50 赛季。"
+      }
+     ]
+    },
+    {
+     "title": "姆巴佩/哈兰德/内马尔签名卡登陆世界杯系列",
+     "orig": "Legends and Debutants Alike Made FIFA World Cup 2026 Unforgettable",
+     "source": "Panini News",
+     "url": "https://blog.paniniamerica.net/",
+     "summary": "世界杯系列签名卡覆盖现役巨星与传奇，拉动高端盒需求。",
+     "players": [
+      {
+       "name": "基利安·姆巴佩",
+       "team": "皇家马德里",
+       "pos": "前锋",
+       "note": "签名卡核心。"
+      },
+      {
+       "name": "埃尔林·哈兰德",
+       "team": "曼城",
+       "pos": "中锋",
+       "note": "签名卡热门。"
+      },
+      {
+       "name": "内马尔",
+       "team": "巴西",
+       "pos": "前锋",
+       "note": "签名卡焦点。"
+      }
+     ]
+    },
+    {
+     "title": "Panini 每周赎回卡（Redemption）进度更新",
+     "orig": "Panini Weekly Redemption Card Updates",
+     "source": "Panini News",
+     "url": "https://blog.paniniamerica.net/",
+     "summary": "Panini 每周五更新未兑现签名/实物卡履约进度，影响二手流通。",
+     "players": []
+    },
+    {
+     "title": "2025-26 Panini Prizm 篮球：新老球星碰撞",
+     "orig": "Stars New and Old Collide in 2025-26 Panini Prizm Basketball",
+     "source": "Panini News",
+     "url": "https://blog.paniniamerica.net/",
+     "summary": "Prizm 篮球平行与签名涵盖多时代球星，是休赛期热门盒。",
+     "players": [
+      {
+       "name": "众 NBA 球星",
+       "team": "NBA",
+       "pos": "—",
+       "note": "Prizm 为篮球卡市场风向标。"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "flashes": []
+}
