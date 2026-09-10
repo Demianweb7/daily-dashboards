@@ -83,6 +83,11 @@
   footer{margin-top:30px;border-top:1px solid var(--line);padding-top:22px;text-align:center;color:var(--muted);font-size:13px}
   footer a{color:var(--total);text-decoration:none}
   footer .big{font-weight:800;color:var(--ink);font-size:15px}
+  #toast{position:fixed;top:0;left:0;right:0;bottom:0;z-index:2000;background:rgba(0,0,0,.45);display:flex;align-items:flex-start;justify-content:center;padding-top:80px}
+  .toast-box{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:0 24px 60px rgba(16,24,40,.28);padding:26px 28px;max-width:420px;text-align:center;margin:0 20px}
+  .toast-box p{font-size:16px;font-weight:700;color:var(--ink);margin:0 0 18px;line-height:1.55}
+  #toastBtn{font-family:inherit;font-size:14px;font-weight:700;color:#fff;border:none;border-radius:10px;padding:10px 22px;background:var(--total,#4f46e5);cursor:pointer}
+  #toastBtn:hover{filter:brightness(1.05)}
   @media(max-width:560px){.hero h1{font-size:27px}.stats{gap:9px}.stat{min-width:80px;padding:10px 12px}.controls-inner{gap:8px}.grid{grid-template-columns:1fr}}
   @media print{
     .controls,.nav,footer{display:none !important}
@@ -274,6 +279,24 @@ window.DASHBOARD_CONFIG={
     $('footCount').textContent=''; $('footSrc').textContent=''; $('footNote').textContent='';
     status('未找到 '+dateStr+' 的日报');
   }
+  function showToast(msg,onConfirm){
+    const old=$('toast'); if(old) old.remove();
+    const box=document.createElement('div'); box.id='toast';
+    box.innerHTML='<div class="toast-box"><p>'+esc(msg)+'</p><button id="toastBtn" type="button">查看前一日</button></div>';
+    document.body.appendChild(box);
+    $('toastBtn').addEventListener('click',()=>{ box.remove(); if(onConfirm) onConfirm(); });
+  }
+  async function fallbackAndShow(requestedEnd){
+    let data=null,date=null;
+    for(let d=prevDay(requestedEnd); d>=defaultDate; d=prevDay(d)){
+      const dd=await CFG.fetchDaily(d);
+      if(dd){ data=dd; date=d; break; }
+      if(d===defaultDate) break;
+    }
+    if(!data && embedded){ data=embedded; date=defaultDate; }
+    if(data) showData(data,date,requestedEnd);
+    else showEmpty(requestedEnd);
+  }
   function wire(){
     const startInp=$('startDate'), endInp=$('endDate'), btn=$('refreshBtn');
     if(!startInp||!endInp||!btn) return;
@@ -294,7 +317,7 @@ window.DASHBOARD_CONFIG={
         if(d===s) break;
       }
       if(found) showData(data, date, e);
-      else showEmpty(e);
+      else showToast('未找到 '+e+' 的日报数据', ()=> fallbackAndShow(e));
     };
     btn.addEventListener('click', doRefresh);
     startInp.addEventListener('change', doRefresh);
@@ -362,13 +385,13 @@ window.DASHBOARD_CONFIG={
     const realToday=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
     // 先显示内嵌的最近一期作为兜底
     if(embedded) showData(embedded, defaultDate, defaultDate);
-    // 自动刷新到今日：优先加载今日快照，没有则回退到内嵌最近一期
+    // 自动刷新到今日：优先加载今日快照，没有则弹出提示并回退到前一日/最近一期
     if(realToday!==defaultDate && CFG.fetchDaily){
       status('正在检查 '+realToday+' 的日报…');
       CFG.fetchDaily(realToday).then(live=>{
         if(live) showData(live, realToday, realToday);
-        else status('今日（'+realToday+'）暂无数据，已显示最近一期（'+defaultDate+'，共 '+totalOf(embedded)+' 条）');
-      }).catch(()=>{ status('今日数据加载失败，已显示最近一期（'+defaultDate+'）'); });
+        else showToast('今日（'+realToday+'）暂无日报数据', ()=> fallbackAndShow(realToday));
+      }).catch(()=>{ status('今日数据加载失败'); showToast('今日数据加载失败', ()=> fallbackAndShow(realToday)); });
     }
     const pBtn=$('exportPdfBtn'); if(pBtn) pBtn.addEventListener('click', exportPDF);
     const iBtn=$('exportImgBtn'); if(iBtn) iBtn.addEventListener('click', exportImage);
