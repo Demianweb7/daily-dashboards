@@ -280,7 +280,8 @@ window.DASHBOARD_CONFIG={
     const now=new Date();
     const realToday=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
     startInp.max=endInp.max=realToday;
-    startInp.value=endInp.value=defaultDate;
+    const initial=(realToday>=defaultDate)?realToday:defaultDate;
+    startInp.value=endInp.value=initial;
     const doRefresh=async ()=>{
       let s=startInp.value, e=endInp.value;
       if(!s||!e){ status('请选择起始日期和结束日期'); return; }
@@ -357,9 +358,17 @@ window.DASHBOARD_CONFIG={
   }
   function init(){
     wire();
+    const now=new Date();
+    const realToday=[now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');
+    // 先显示内嵌的最近一期作为兜底
     if(embedded) showData(embedded, defaultDate, defaultDate);
-    if(CFG.fetchDaily){
-      CFG.fetchDaily(defaultDate).then(live=>{ if(live) showData(live, defaultDate, defaultDate); }).catch(()=>{});
+    // 自动刷新到今日：优先加载今日快照，没有则回退到内嵌最近一期
+    if(realToday!==defaultDate && CFG.fetchDaily){
+      status('正在检查 '+realToday+' 的日报…');
+      CFG.fetchDaily(realToday).then(live=>{
+        if(live) showData(live, realToday, realToday);
+        else status('今日（'+realToday+'）暂无数据，已显示最近一期（'+defaultDate+'，共 '+totalOf(embedded)+' 条）');
+      }).catch(()=>{ status('今日数据加载失败，已显示最近一期（'+defaultDate+'）'); });
     }
     const pBtn=$('exportPdfBtn'); if(pBtn) pBtn.addEventListener('click', exportPDF);
     const iBtn=$('exportImgBtn'); if(iBtn) iBtn.addEventListener('click', exportImage);
