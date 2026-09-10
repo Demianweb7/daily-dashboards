@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI HOT 日报</title>
+<style>
+  :root{
+    --bg:#f5f7fb; --panel:#ffffff; --ink:#1f2430; --muted:#6b7280;
+    --line:#e6e9f0; --shadow:0 1px 3px rgba(16,24,40,.06),0 6px 20px rgba(16,24,40,.05);
+    --radius:16px; --total:#4f46e5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px 64px}
+  .hero{background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 55%,#9333ea 100%);color:#fff;border-radius:0 0 28px 28px;padding:44px 20px 36px;margin-bottom:0;box-shadow:var(--shadow)}
+  .hero-inner{max-width:1120px;margin:0 auto;padding:0 20px}
+  .kicker{font-size:13px;letter-spacing:.16em;text-transform:uppercase;opacity:.85;font-weight:600}
+  .hero h1{font-size:34px;font-weight:800;margin:6px 0 2px;letter-spacing:.5px}
+  .hero .date{font-size:20px;font-weight:600;opacity:.95}
+  .hero .gen{font-size:13px;opacity:.82;margin-top:6px}
+  .stats{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+  .stat{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:14px;padding:12px 16px;min-width:96px;backdrop-filter:blur(4px)}
+  .stat .n{font-size:24px;font-weight:800;line-height:1}
+  .stat .l{font-size:12.5px;opacity:.92;margin-top:5px}
+  .stat.total{background:rgba(255,255,255,.95);color:var(--total)}
+  .stat.total .l{color:#6b7280}
+  .controls{background:var(--panel);border-bottom:1px solid var(--line);padding:14px 0}
+  .controls-inner{max-width:1120px;margin:0 auto;padding:0 20px;display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+  .ctl-label{font-weight:700;font-size:14px;color:var(--ink)}
+  .controls label{font-size:13px;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+  .controls input[type=date]{font-family:inherit;font-size:13px;padding:7px 10px;border:1px solid var(--line);border-radius:9px;color:var(--ink);background:#fff}
+  .controls .sep{color:var(--muted);font-weight:700}
+  #refreshBtn{cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;color:#fff;border:none;border-radius:10px;padding:9px 18px;background:var(--total);box-shadow:var(--shadow);transition:.15s}
+  #refreshBtn:hover{transform:translateY(-1px);filter:brightness(1.05)}
+  .status{font-size:13px;color:var(--muted);margin-left:4px}
+  .nav{position:sticky;top:0;z-index:20;background:rgba(245,247,251,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:12px 0;margin-bottom:26px}
+  .nav-inner{max-width:1120px;margin:0 auto;padding:0 20px;display:flex;flex-wrap:wrap;gap:10px}
+  .nav a{text-decoration:none;color:var(--ink);font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:7px 15px;display:flex;align-items:center;gap:7px;transition:.15s}
+  .nav a:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+  .nav a .dot{width:9px;height:9px;border-radius:50%}
+  .nav a .c{font-size:12px;color:var(--muted);font-weight:700}
+  .section{margin-bottom:38px;scroll-margin-top:70px}
+  .sec-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+  .sec-bar{width:5px;height:26px;border-radius:4px}
+  .sec-head h2{font-size:21px;font-weight:800}
+  .sec-head .cnt{font-size:13px;color:var(--muted);font-weight:600;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px 11px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:.18s;position:relative;overflow:hidden}
+  .card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent,#4f46e5)}
+  .card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(16,24,40,.10)}
+  .card-top{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+  .num{flex:0 0 auto;width:30px;height:30px;border-radius:9px;background:var(--accent,#4f46e5);color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center}
+  .chip{font-size:12px;font-weight:600;color:var(--accent,#4f46e5);background:color-mix(in srgb,var(--accent,#4f46e5) 12%,#fff);border:1px solid color-mix(in srgb,var(--accent,#4f46e5) 28%,#fff);border-radius:999px;padding:3px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  .card h3{font-size:16px;font-weight:700;line-height:1.5;margin-bottom:9px}
+  .card h3 a{color:var(--ink);text-decoration:none}
+  .card h3 a:hover{color:var(--accent,#4f46e5);text-decoration:underline}
+  .sum{font-size:13.5px;color:#3a4252;flex:1;margin-bottom:14px}
+  .read{align-self:flex-start;font-size:13px;font-weight:700;color:var(--accent,#4f46e5);text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+  .read:hover{text-decoration:underline}
+  .flash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px}
+  .flash{background:var(--panel);border:1px solid var(--line);border-left:4px solid #ef4444;border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);font-size:13.5px}
+  .flash .ft{font-weight:700;margin-bottom:6px}
+  .flash .ft a{color:var(--ink);text-decoration:none}
+  .flash .ft a:hover{color:#ef4444;text-decoration:underline}
+  .flash .fm{color:var(--muted);font-size:12px;margin-top:5px}
+  .empty{background:var(--panel);border:1px dashed var(--line);border-radius:var(--radius);padding:22px;text-align:center;color:var(--muted);font-size:14px}
+  footer{margin-top:30px;border-top:1px solid var(--line);padding-top:22px;text-align:center;color:var(--muted);font-size:13px}
+  footer a{color:var(--total);text-decoration:none}
+  footer .big{font-weight:800;color:var(--ink);font-size:15px}
+  @media(max-width:560px){.hero h1{font-size:27px}.stats{gap:9px}.stat{min-width:80px;padding:10px 12px}.controls-inner{gap:8px}}
+</style>
+</head>
+<body>
+  <header class="hero"><div class="hero-inner">
+    <div class="kicker" id="kicker"></div>
+    <h1 id="title"></h1>
+    <div class="date" id="dateLine"></div>
+    <div class="gen" id="genLine"></div>
+    <div class="stats" id="stats"></div>
+  </div></header>
+
+  <div class="controls"><div class="controls-inner">
+    <span class="ctl-label">日期范围</span>
+    <label>起始 <input type="date" id="startDate"></label>
+    <span class="sep">→</span>
+    <label>结束 <input type="date" id="endDate"></label>
+    <button id="refreshBtn" type="button">↻ 刷新</button>
+    <span class="status" id="status"></span>
+  </div></div>
+
+  <nav class="nav"><div class="nav-inner" id="nav"></div></nav>
+  <main class="wrap" id="main"></main>
+
+  <footer>
+    <div class="big" id="footCount"></div>
+    <div id="footSrc" style="margin-top:6px"></div>
+    <div id="footNote" style="margin-top:4px"></div>
+  </footer>
+
+<script>window.DASHBOARD_CONFIG={
+  defaultDate:'2026-07-27',
+  isPower:false,
+  embedded:{"date": "2026-07-27", "source": "aihot.virxact.com", "canonical": "https://aihot.virxact.com/daily/2026-07-27", "generatedAt": "2026-07-27T00:00:21.312Z", "title": "AI HOT 日报", "kicker": "AI HOT · 每日 AI 早报", "sections": [{"label": "产品发布/更新", "color": "#10b981", "items": [{"title": "xAI 发布 Grok CLI 并支持 /tutorial 命令", "source": "X：Elon Musk (@elonmusk, xAI)", "url": "https://x.com/elonmusk/status/2081174079969632347", "summary": "下载 Grok Build 并输入 /tutorial http://X.ai/cli"}, {"title": "Suno 推出多项新功能，含MIDI导出等", "source": "X：Suno (@suno)", "url": "https://x.com/suno/status/2081443050312843765", "summary": "我们一直在以比以往更快的速度构建！🚀 以下是网页端和移动端的新功能一览： • 高级音轨分离 • 将音轨导出为 MIDI • 歌词合写与自动保存 • 截图生成歌曲 • Apple CarPlay 与 Android Auto 你最期待 Suno 的哪些新功能？"}]}, {"label": "行业动态", "color": "#f59e0b", "items": [{"title": "数百用户向ChatGPT索要毒药与生物武器配方，部分获得高中生水平步骤指南", "source": "The Decoder：AI News（RSS）", "url": "https://the-decoder.com/hundreds-asked-chatgpt-for-poison-and-bioweapon-recipes-and-some-got-step-by-step-high-school-level-guides", "summary": "2025年夏季，OpenAI内部将GPT-5标记为高风险，因其可帮助教育程度有限的用户制造生物危害。据《华尔街日报》报道，自去年夏天以来，数百名用户向ChatGPT询问如何制造生物武器和毒药，部分用户获得了员工称高中生都能遵循的逐步指南。OpenAI暂停了相关账户，但未向当局报告任何事件。"}, {"title": "OpenAI、Anthropic 游说美国限制中国开源模型，黄仁勋与马斯克公开反对", "source": "IT之家（RSS）", "url": "https://www.ithome.com/0/981/797.htm", "summary": "OpenAI 与 Anthropic 正游说美国监管机构限制中国开源 AI 模型，认为开放开发过于危险。英伟达 CEO 黄仁勋、微软 CEO 纳德拉、马斯克及扎克伯格等人公开支持开源，签署联名信反对限制。近 200 家硅谷创业公司也敦促特朗普政府不要限制获取中国开源模型，美国官员倾向于将此事作为国家安全问题单独处理。"}]}, {"label": "技巧与观点", "color": "#0ea5e9", "items": [{"title": "在 8 美元的 ESP32-S3 微控制器上运行 28.9M 参数大语言模型", "source": "Hacker News 热门（buzzing.cc 中文翻译）", "url": "https://github.com/slvDev/esp32-ai", "summary": "开发者成功在售价约 8 美元的 ESP32-S3 微控制器上运行了一个 28.9M 参数的大语言模型，完全在芯片本地运行，无需连接服务器，生成速度约 9.5 tok/s。"}, {"title": "Claude Opus 5 系统提示词被完整泄露，共 135027 字符、约 3.4 万 token", "source": "IT之家（RSS）", "url": "https://www.ithome.com/0/981/688.htm", "summary": "开发者 Eversmile1 在 GitHub 上公开了 Claude Opus 5 的完整系统提示词，包含 30 个工具的 JSON schema、严格的版权合规规则（单次引用不超过 15 词）和跨会话记忆系统。泄露后 24 小时内，已有开发者用 Opus 5 成功生成 3D 射击游戏和《火箭联盟》克隆版等复杂 Demo。"}]}], "flashes": []},
+  fetchDaily: async function(dateStr){
+    function normalize(d){
+      const FIXED={'模型发布/更新':'#6366f1','产品发布/更新':'#10b981','行业动态':'#f59e0b','论文研究':'#f43f5e','技巧与观点':'#0ea5e9'};
+      const PAL=['#6366f1','#10b981','#f59e0b','#f43f5e','#0ea5e9','#8b5cf6'];
+      const sec=(d.sections||[]).map((s,i)=>({label:s.label,color:FIXED[s.label]||PAL[i%PAL.length],items:(s.items||[]).map(it=>({title:it.title||'',source:it.sourceName||it.source||'未知来源',url:it.sourceUrl||it.permalink||'#',summary:it.summary||''}))}));
+      return {date:d.date,source:'aihot.virxact.com',canonical:(d.attribution&&d.attribution.canonical)||'https://aihot.virxact.com',generatedAt:d.generatedAt,title:'AI HOT 日报',kicker:'AI HOT · 每日 AI 早报',sections:sec,flashes:d.flashes||[]};
+    }
+    try{ const r=await fetch('https://aihot.virxact.com/api/public/daily/'+dateStr,{headers:{'Accept':'application/json'}}); if(r.ok){const d=await r.json(); if(d&&!d.error) return normalize(d);} }catch(e){}
+    try{ const r=await fetch('data/aihot-'+dateStr+'.json',{headers:{'Accept':'application/json'}}); if(r.ok) return await r.json(); }catch(e){}
+    if(dateStr==='2026-07-27') return window.DASHBOARD_CONFIG.embedded;
+    return null;
+  }
+};</script>
+<script>
+(function(){
+  const CFG = window.DASHBOARD_CONFIG || {};
+  const embedded = CFG.embedded;
+  const defaultDate = CFG.defaultDate || (embedded && embedded.date);
+  const isPower = !!CFG.isPower;
+  const $ = id => document.getElementById(id);
+  function esc(s){return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+  function fmtDateCN(ds){if(!ds)return '';const dt=new Date(ds+'T00:00:00Z');const wk=['周日','周一','周二','周三','周四','周五','周六'][dt.getUTCDay()];const p=n=>ds.split('-')[n];return (+p(0))+' 年 '+(+p(1))+' 月 '+(+p(2))+' 日 · '+wk;}
+  function fmtBeijing(iso){if(!iso)return '';const d=new Date(iso);if(isNaN(d))return '';const u=d.getTime()+d.getTimezoneOffset()*60000;const b=new Date(u+8*3600000);const wk=['周日','周一','周二','周三','周四','周五','周六'][b.getDay()];const p=n=>(''+n).padStart(2,'0');return b.getFullYear()+'年'+(b.getMonth()+1)+'月'+b.getDate()+'日 '+wk+' '+p(b.getHours())+':'+p(b.getMinutes());}
+  function trunc(s,n){s=s||'';const a=Array.from(s);return a.length<=n?s:a.slice(0,n).join('')+'…';}
+  function prevDay(s){const d=new Date(s+'T00:00:00Z');d.setUTCDate(d.getUTCDate()-1);return d.toISOString().slice(0,10);}
+  function totalOf(data){return (data.sections||[]).reduce((a,s)=>a+((s.items&&s.items.length)||0),0);}
+
+  function render(data){
+    $('title').textContent = data.title || '日报';
+    $('kicker').textContent = data.kicker || '';
+    $('dateLine').textContent = fmtDateCN(data.date);
+    $('genLine').textContent = data.generatedAt ? ('每日北京时间 08:00 生成 · 本期生成于 '+fmtBeijing(data.generatedAt)) : ('检索于 '+fmtDateCN(data.date)+(isPower?'（联网聚合）':''));
+    const statsEl=$('stats'); statsEl.innerHTML='';
+    const t=document.createElement('div'); t.className='stat total';
+    t.innerHTML='<div class="n">'+totalOf(data)+'</div><div class="l">总条数</div>';
+    statsEl.appendChild(t);
+    (data.sections||[]).forEach(s=>{
+      const el=document.createElement('div'); el.className='stat';
+      el.style.background='color-mix(in srgb,'+s.color+' 16%,#fff)';
+      el.style.borderColor='color-mix(in srgb,'+s.color+' 30%,#fff)';
+      el.innerHTML='<div class="n" style="color:'+s.color+'">'+s.items.length+'</div><div class="l">'+esc(s.label)+'</div>';
+      statsEl.appendChild(el);
+    });
+    const navEl=$('nav'); navEl.innerHTML='';
+    (data.sections||[]).forEach((s,i)=>{
+      const a=document.createElement('a'); a.href='#sec-'+i;
+      a.innerHTML='<span class="dot" style="background:'+s.color+'"></span>'+esc(s.label)+'<span class="c">'+s.items.length+'</span>';
+      navEl.appendChild(a);
+    });
+    const main=$('main'); main.innerHTML='';
+    let g=0;
+    (data.sections||[]).forEach((s,i)=>{
+      const sec=document.createElement('section'); sec.className='section'; sec.id='sec-'+i;
+      const h=document.createElement('div'); h.className='sec-head';
+      h.innerHTML='<div class="sec-bar" style="background:'+s.color+'"></div><h2>'+esc(s.label)+'</h2><span class="cnt">'+s.items.length+' 条</span>';
+      sec.appendChild(h);
+      const grid=document.createElement('div'); grid.className='grid';
+      (s.items||[]).forEach(it=>{
+        g++;
+        const c=document.createElement('article'); c.className='card';
+        c.style.setProperty('--accent',s.color);
+        c.innerHTML='<div class="card-top"><div class="num">'+g+'</div><span class="chip">'+esc(it.source)+'</span></div>'+
+          '<h3><a href="'+esc(it.url)+'" target="_blank" rel="noopener noreferrer">'+esc(it.title)+'</a></h3>'+
+          '<p class="sum">'+esc(trunc(it.summary,60))+'</p>'+
+          '<a class="read" href="'+esc(it.url)+'" target="_blank" rel="noopener noreferrer">阅读原文 →</a>';
+        grid.appendChild(c);
+      });
+      sec.appendChild(grid); main.appendChild(sec);
+    });
+    if(data.flashes && data.flashes.length){
+      const sec=document.createElement('section'); sec.className='section'; sec.id='flashes';
+      const h=document.createElement('div'); h.className='sec-head';
+      h.innerHTML='<div class="sec-bar" style="background:#ef4444"></div><h2>快讯</h2><span class="cnt">'+data.flashes.length+' 条</span>';
+      sec.appendChild(h);
+      const grid=document.createElement('div'); grid.className='flash-grid';
+      data.flashes.forEach(fl=>{
+        const el=document.createElement('div'); el.className='flash';
+        el.innerHTML='<div class="ft"><a href="'+esc(fl.url||'#')+'" target="_blank" rel="noopener noreferrer">'+esc(fl.title||'')+'</a></div><div>'+esc(fl.source||'')+'</div>'+(fl.publishedAt?'<div class="fm">'+fmtBeijing(fl.publishedAt)+'</div>':'');
+        grid.appendChild(el);
+      });
+      sec.appendChild(grid); main.appendChild(sec);
+      const fa=document.createElement('a'); fa.href='#flashes';
+      fa.innerHTML='<span class="dot" style="background:#ef4444"></span>快讯<span class="c">'+data.flashes.length+'</span>';
+      navEl.appendChild(fa);
+    }
+    $('footCount').textContent='本期共 '+totalOf(data)+' 条动态';
+    $('footSrc').innerHTML='数据源：<strong>'+esc(data.source||'')+'</strong>'+(data.canonical?'（<a href="'+esc(data.canonical)+'" target="_blank" rel="noopener noreferrer">原文归档</a>）':'');
+    $('footNote').textContent=data.note||'';
+  }
+  function status(msg){const el=$('status'); if(el) el.textContent=msg;}
+  function showData(data,loadedDate,requestedEnd){
+    render(data);
+    let msg='已加载 '+loadedDate+' 的日报（共 '+totalOf(data)+' 条）';
+    if(requestedEnd && requestedEnd!==loadedDate) msg+=' · 结束日期 '+requestedEnd+' 暂无数据，已回退至 '+loadedDate;
+    status(msg);
+  }
+  function showEmpty(dateStr){
+    $('main').innerHTML='<div class="empty" style="grid-column:1/-1">所选日期（'+dateStr+'）暂无可用日报数据。'+(isPower?'电力交易日报为联网搜索聚合快照，需生成对应日期的快照文件（data/power-'+dateStr+'.json）后方可加载。':'')+'</div>';
+    $('stats').innerHTML=''; $('nav').innerHTML='';
+    $('title').textContent=(embedded&&embedded.title)||'日报';
+    $('kicker').textContent=(embedded&&embedded.kicker)||'';
+    $('dateLine').textContent=fmtDateCN(dateStr); $('genLine').textContent='';
+    $('footCount').textContent=''; $('footSrc').textContent=''; $('footNote').textContent='';
+    status('未找到 '+dateStr+' 的日报');
+  }
+  function wire(){
+    const startInp=$('startDate'), endInp=$('endDate'), btn=$('refreshBtn');
+    if(!startInp||!endInp||!btn) return;
+    const today=defaultDate;
+    startInp.max=endInp.max=today;
+    startInp.value=endInp.value=today;
+    btn.addEventListener('click', async ()=>{
+      let s=startInp.value, e=endInp.value;
+      if(!s||!e){ status('请选择起始日期和结束日期'); return; }
+      if(e<s){ const tmp=s; s=e; e=tmp; startInp.value=s; endInp.value=e; }
+      status('正在加载…');
+      let found=false, data=null, date=null;
+      for(let d=e; d>=s; d=prevDay(d)){
+        const dd = await CFG.fetchDaily(d);
+        if(dd){ found=true; data=dd; date=d; break; }
+        if(d===s) break;
+      }
+      if(found) showData(data, date, e);
+      else showEmpty(e);
+    });
+  }
+  function init(){
+    wire();
+    if(embedded) showData(embedded, defaultDate, defaultDate);
+    if(CFG.fetchDaily){
+      CFG.fetchDaily(defaultDate).then(live=>{ if(live) showData(live, defaultDate, defaultDate); }).catch(()=>{});
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+</body>
+</html>
